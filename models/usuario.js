@@ -20,7 +20,7 @@ const UsersSchema = Schema({
   rol: {
     type: String,
     require: true,
-    emun: ["ADMIN_ROLE", "USER_ROLE"],
+    // emun: ["ADMIN_ROLE", "USER_ROLE"],
   },
   state: {
     type: Boolean,
@@ -32,4 +32,11 @@ const UsersSchema = Schema({
   },
 });
 
-module.exports = model("Users", UsersSchema);
+// aqui podemos sobre escribir metodos
+UsersSchema.methods.toJSON = function () {
+  // lo que hace esta funcion es eliminar el pasword encriptado del req
+  const { __V, password, ...usuario } = this.toObject();
+  return usuario;
+};
+
+module.exports = model("User", UsersSchema);

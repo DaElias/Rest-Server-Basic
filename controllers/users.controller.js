@@ -1,6 +1,6 @@
 const { response, request } = require("express");
-const Users = require("../models/usuario");
 const bcryptjs = require("bcryptjs");
+const Usuario = require("../models/usuario");
 // const { validationResult } = require("express-validator");
 
 const getUsuarios = (req = request, res = response) => {
@@ -13,17 +13,16 @@ const getUsuarios = (req = request, res = response) => {
 
 const postUsuarios = async (req, res = response) => {
   const { name, mail, password, rol } = req.body;
-  const usuario = new Users({ name, mail, password, rol });
-  // valida que el correo sea efectivamente un correo
- 
-  // verificar si el correo existe
-  const verificarMail = await Users.findOne({ mail });
-  if (verificarMail) {
-    return res.status(400).json({
-      msg: "Error: El correo ya esta registrado.",
-    });
-  }
-  // verificar contraseña
+  const usuario = new Usuario({ name, mail, password, rol });
+
+  // // verificar si el correo existe
+  // const verificarMail = await Users.findOne({ mail });
+  // if (verificarMail) {
+  //   return res.status(400).json({
+  //     msg: "Error: El correo ya esta registrado.",
+  //   });
+  // }
+  // encripta la contraseña
   const salt = bcryptjs.genSaltSync();
   usuario.password = bcryptjs.hashSync(password, salt);
   await usuario.save();
@@ -34,11 +33,19 @@ const postUsuarios = async (req, res = response) => {
 };
 
 // con put puedes pandar parametros por el url
-const putUsuario = (req, res = response) => {
-  const id = req.params.usuarioID;
+const putUsuario = async (req, res = response) => {
+  const { id } = req.params;
+  const { password, mail,google, ...resto } = req.body;
+
+  // TODO validar base de datos
+  if (password) {
+    const salt = bcryptjs.genSaltSync();
+    resto.password = bcryptjs.hashSync(password, salt);
+  }
+  const usuario = await Usuario.findByIdAndUpdate(id, resto);
   res.json({
     msg: "put Page - Controller",
-    id,
+    id
   });
 };
 
