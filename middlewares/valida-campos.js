@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator");
 
 
 const validarCampos = (req , res , next) => {
-     // valida que el correo sea efectivamente un correo
+  // valida que los campos esten correctos 
   const error = validationResult(req);
   if (!error.isEmpty()) {
     return res.status(400).json(error);

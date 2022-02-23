@@ -12,7 +12,7 @@ const getUsuarios = (req = request, res = response) => {
 };
 
 const postUsuarios = async (req, res = response) => {
-  const { name, mail, password, rol } = req.body;
+  const { _id, name, mail, password, rol } = req.body;
   const usuario = new Usuario({ name, mail, password, rol });
 
   // // verificar si el correo existe
@@ -35,7 +35,7 @@ const postUsuarios = async (req, res = response) => {
 // con put puedes pandar parametros por el url
 const putUsuario = async (req, res = response) => {
   const { id } = req.params;
-  const { password, mail,google, ...resto } = req.body;
+  const { _id, password, mail, google, ...resto } = req.body;
 
   // TODO validar base de datos
   if (password) {
@@ -45,7 +45,8 @@ const putUsuario = async (req, res = response) => {
   const usuario = await Usuario.findByIdAndUpdate(id, resto);
   res.json({
     msg: "put Page - Controller",
-    id
+    id,
+    usuario,
   });
 };
 
