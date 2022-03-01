@@ -35,7 +35,8 @@ const UsersSchema = Schema({
 // aqui podemos sobre escribir metodos
 UsersSchema.methods.toJSON = function () {
   // lo que hace esta funcion es eliminar el pasword encriptado del req
-  const { __V, password, ...usuario } = this.toObject();
+  const { __v, password, _id,...usuario } = this.toObject();
+  usuario.uid=_id;
   return usuario;
 };
 

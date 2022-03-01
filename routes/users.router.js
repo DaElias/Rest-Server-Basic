@@ -8,16 +8,19 @@ const {
 } = require("../controllers/users.controller");
 const { check } = require("express-validator");
 const { validarCampos } = require("../middlewares/valida-campos");
-const router = Router();
-const Rol = require("../models/rol");
 const {
   esRolValido,
   emailExiste,
   existeUsuarioId,
 } = require("../helpers/db_validator");
+const { validarJwt } = require("../middlewares/validar-jwt");
+const {validarRoles} = require("../middlewares/validar-roles")
+
+
+//* Routes code here!! */
+const router = Router();
 
 router.get("/", getUsuarios);
-
 // check basicamente valida que mail sea un Email
 router.post(
   "/",
@@ -36,7 +39,6 @@ router.post(
   ],
   postUsuarios
 );
-
 router.put(
   "/:id",
   [
@@ -46,17 +48,17 @@ router.put(
   ],
   putUsuario
 );
-
 router.delete(
   "/:id",
   [
+    validarJwt,
+    validarRoles,
     check("id", "no es un Id valido!!").isMongoId(),
     check("id").custom(existeUsuarioId),
     validarCampos,
   ],
   deleteUsuarios
 );
-
 router.patch("/", pathUsuarios);
 
 module.exports = router;

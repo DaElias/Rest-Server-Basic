@@ -6,8 +6,9 @@ const Usuario = require("../models/usuario");
 //  {{url}}/api/usuarios?limite=2&desde=9
 const getUsuarios = async (req = request, res = response) => {
   // const { query, nombre, apikey } = req;
-  const { limite = 6, desde = 0 } = req.query;
+  const { limite = 5, desde = 0 } = req.query;
   const query = {state:true};
+
   // Puedo mandar condiciones a la hora llamar los usuarios Usuarios.find({paramatro:true||false})
   
   // const usuarios = await Usuario.find(query)  /* aqui le estoy diciendo llama a todos los state: true */
@@ -23,8 +24,8 @@ const [usuario , total] = await Promise.all([
 ]);
 
   res.json({
-    total,
     usuario,
+    total,
   });
 };
 
@@ -51,7 +52,7 @@ const postUsuarios = async (req, res = response) => {
 // con put puedes pandar parametros por el url y modificar mis datos dentro de la db
 const putUsuario = async (req, res = response) => {
   const { id } = req.params;
-  const { _id, password, mail, google, ...resto } = req.body;
+  const { _id, password, mail, google,state, ...resto } = req.body;
 
   // TODO validar base de datos
   if (password) {
@@ -66,13 +67,18 @@ const putUsuario = async (req, res = response) => {
 
 const deleteUsuarios = async (req, res = response) => {
   const {id} = req.params;
-
   // #Para eliminar el usuario 
   // const usuario = await Usuario.findByIdAndDelete(id);
   // modificamos el usurio con id.
   const usuario = await Usuario.findByIdAndUpdate(id,{state:false});
 
-  res.json(usuario);
+ 
+
+
+  const usuarioAuth = req.uid;
+  res.json({
+    usuario,usuarioAuth
+  });
 };
 
 const pathUsuarios = (req, res = response) => {
