@@ -7,15 +7,23 @@ const {
   pathUsuarios,
 } = require("../controllers/users.controller");
 const { check } = require("express-validator");
-const { validarCampos } = require("../middlewares/valida-campos");
+
+// const { validarCampos } = require("../middlewares/valida-campos");
+// const { validarJwt } = require("../middlewares/validar-jwt");
+// const {validarRoles,tieneRol} = require("../middlewares/validar-roles")
+// * Truco para organizar el codigo!!
+const {
+  validarCampos,
+  validarJwt,
+  validarRoles,
+  tieneRol,
+} = require("../middlewares");
+
 const {
   esRolValido,
   emailExiste,
   existeUsuarioId,
 } = require("../helpers/db_validator");
-const { validarJwt } = require("../middlewares/validar-jwt");
-const {validarRoles} = require("../middlewares/validar-roles")
-
 
 //* Routes code here!! */
 const router = Router();
@@ -52,7 +60,8 @@ router.delete(
   "/:id",
   [
     validarJwt,
-    validarRoles,
+    // validarRoles,
+    tieneRol("ADMIN_ROLE", "VENTAS_ROLE"),
     check("id", "no es un Id valido!!").isMongoId(),
     check("id").custom(existeUsuarioId),
     validarCampos,
