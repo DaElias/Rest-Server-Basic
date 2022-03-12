@@ -2,9 +2,7 @@ const { response, request } = require("express");
 const User = require("../models/usuario");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers/generarJWT");
-
-
-
+const { googleVerify } = require("../helpers/google_verify");
 const loginPost = async (req = response, res = request) => {
   const { mail, password } = req.body;
   try {
@@ -45,7 +43,48 @@ const loginPost = async (req = response, res = request) => {
   }
 };
 
-module.exports = { loginPost };
+const googleSignIn = async (req, res = response) => {
+  const { id_token } = req.body;
+
+  try {
+    const { name, picture, email } = await googleVerify(id_token);
+    const mail = email;
+    let usuario = await User.findOne({ mail });
+    if (!usuario) {
+      //crear usuario
+      const data = {
+        name,
+        mail: email,
+        password: ":D",
+        img: picture,
+        google: true,
+        rol: "USER_ROLE",
+      };
+      usuario = new User(data);
+      await usuario.save();
+    }
+    //si el usuario de Db esta falso
+    if (!usuario.state) {
+      return res.status(401).json({
+        mgs: "El usuario no esta disponible!!",
+      });
+    }
+    const token = await generarJWT(usuario.id);
+    res.json({
+      msg: "Usuario validado!!",
+      token,
+      usuario,
+    });
+  } catch (error) {
+    // console.log("Error: ", error);
+    res.json({
+      error,
+      msg: "Token invalido!!",
+    });
+  }
+};
+
+module.exports = { loginPost, googleSignIn };
 
 /*
 //* example
