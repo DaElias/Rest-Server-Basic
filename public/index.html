@@ -55,7 +55,12 @@
         console.log(google.accounts.id);
         google.accounts.id.disableAutoSelect();
         const mail = localStorage.getItem("mail");
+        // google.accounts.id.revoke(mail, (done) => {
+        //   localStorage.clear();
+        //   // location.reload();
+        // });
         google.accounts.id.revoke(mail, (done) => {
+          console.log("consent revoked");
           localStorage.clear();
           location.reload();
         });
