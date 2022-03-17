@@ -21,7 +21,6 @@ const validarRoles = (req, res = response, next) => {
 const tieneRol = (...roles) => {
   return (req, res, next) => {
     const { rol } = req.uid;
-
     if (!rol) {
       return res.status(500).json({
         msg: "El error al validar el Rol!!!",

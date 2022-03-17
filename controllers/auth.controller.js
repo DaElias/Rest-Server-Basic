@@ -32,7 +32,7 @@ const loginPost = async (req = response, res = request) => {
     //* genera JWT
     const token = await generarJWT(usuario.id);
 
-    res.json({
+    return res.json({
       usuario,
       token,
     });
@@ -72,9 +72,8 @@ const googleSignIn = async (req, res = response) => {
     }
     const token = await generarJWT(usuario.id);
     res.json({
-      msg: "Usuario validado!!",
-      token,
       usuario,
+      token,
     });
   } catch (error) {
     // console.log("Error: ", error);

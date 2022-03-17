@@ -11,6 +11,7 @@ const generarJWT = (uid = "") => {
       process.env.SECRETE_PRIVATE_KEY,
       {
         algorithm: "HS256",
+        expiresIn: "4h",
       },
       (error, token) => {
         if (error) {
@@ -29,18 +30,18 @@ module.exports = {
 };
 
 //* old code
- // jwt.sign(
-    //   payload,
-    //   process.SECRETPRIVATEKEY,
-    //   {
-    //     expiresIn: "4h",
-    //   },
-    //   (err, token) => {
-    //     if (err) {
-    //       console.log(err);
-    //       reject("No se pudo generar el token!");
-    //     } else {
-    //       resolve(token);
-    //     }
-    //   }
-    // );
+// jwt.sign(
+//   payload,
+//   process.SECRETPRIVATEKEY,
+//   {
+//     expiresIn: "4h",
+//   },
+//   (err, token) => {
+//     if (err) {
+//       console.log(err);
+//       reject("No se pudo generar el token!");
+//     } else {
+//       resolve(token);
+//     }
+//   }
+// );

@@ -16,7 +16,7 @@ const obtenerCategorias = async (req, res) => {
     Categoria.countDocuments(query),
   ]);
 
-  res.json({
+  return res.json({
     categorias,
     total,
   });
@@ -48,11 +48,11 @@ const actualizarCategoria = async (req, res) => {
     });
   }
   const cambioUsuario = req.uid._id;
-  const resto = {
+  const data = {
     name,
     usuario: cambioUsuario,
   };
-  const uppdate = await Categoria.findByIdAndUpdate(id, resto, {
+  const uppdate = await Categoria.findByIdAndUpdate(id, data, {
     new: true,
   }).populate("usuario", "name");
   return res.json({
@@ -62,14 +62,13 @@ const actualizarCategoria = async (req, res) => {
 
 const borrarCategoria = async (req, res) => {
   const { id } = req.params;
-  console.log(req.uid)
   const eliminarCatego = await Categoria.findByIdAndUpdate(
     id,
     {
       state: false,
     },
     { new: true }
-  ).populate("usuario","name");
+  ).populate("usuario", "name");
 
   return res.json({
     categoria: eliminarCatego,
