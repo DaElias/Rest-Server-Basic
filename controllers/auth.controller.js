@@ -3,6 +3,7 @@ const User = require("../models/usuario");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers/generarJWT");
 const { googleVerify } = require("../helpers/google_verify");
+
 const loginPost = async (req = response, res = request) => {
   const { mail, password } = req.body;
   try {

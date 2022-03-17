@@ -3,9 +3,10 @@ const jwt = require("jsonwebtoken");
 const Usuario = require("../models/usuario");
 
 const validarJwt = async (req, res = response, next) => {
+  //* Esta funcion valida si en el header esta el token de acceso
   const token = req.header("x-token");
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       msg: "Acceso denegado la petición no esta validada!! ",
     });
   }
@@ -15,7 +16,7 @@ const validarJwt = async (req, res = response, next) => {
 
     if (!usuario.state) {
         return res.status(401).json({
-          msg:""
+          msg:"La cuenta no esta disponible!!"
         })
       }
 

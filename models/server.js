@@ -8,8 +8,15 @@ class Server {
     this.app = express();
     this.port = process.env.PORT || 3000;
     //rutas del servidor!!
-    this.authPath = "/api/auth";
-    this.usuariosPath = "/api/usuarios";
+    this.paths = {
+      authPath: "/api/auth",
+      categoriasPath: "/api/categorias",
+      usuariosPath: "/api/usuarios",
+    };
+    // this.authPath = "/api/auth";
+    // this.usuariosPath = "/api/usuarios";
+    // this.categoriasPath = "/api/categorias";
+
     //conectar a db
     this.conectDB();
     //middelware
@@ -35,8 +42,9 @@ class Server {
   //rutas del servidor
   routes() {
     //* this is the route of authentication
-    this.app.use(this.authPath,require("../routes/auth.router"));
-    this.app.use(this.usuariosPath, require("../routes/users.router"));
+    this.app.use(this.paths.authPath, require("../routes/auth.router"));
+    this.app.use(this.paths.categoriasPath, require("../routes/categorias.router"));
+    this.app.use(this.paths.usuariosPath, require("../routes/users.router"));
   }
 
   listen() {
